@@ -5,7 +5,8 @@
 aller dans le dossier 1010
 ```bash
 git pull
-git commit -am "*message qui explique les changements*"
+git add -A
+git commit -m "*message qui explique les changements*"
 git push
 ```
 
