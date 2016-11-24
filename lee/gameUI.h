@@ -6,11 +6,13 @@
 
 class GameUI {
  private:
-  Window game;
+  Window *game, *help, *score, *highscore, *blocks;
   Piece piece;
 
  public:
-  GameUI(Window w, Piece p);
+  GameUI(Piece p);
+
+  void printPiece();
 };
 
 #endif
