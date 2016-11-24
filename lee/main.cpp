@@ -21,7 +21,7 @@ void myprogram() {
   c[2].x = 2;
   c[2].y = 0;
 
-  Piece piece(s, c, BRED);
+  Piece piece(s, c, DEEPORANGE);
 
   GameUI gameUI(piece);
   gameUI.printPiece();

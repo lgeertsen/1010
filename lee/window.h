@@ -23,7 +23,23 @@ enum Color {
   BMAGENTA,// couleur fond = magenta, couleur texte = noir
   BRED,    // couleur fond = rouge,   couleur texte = noir
   CLOUD,
-  MIDNIGHT
+  MIDNIGHT,
+  RED,
+  PINK,
+  PURPLE,
+  DEEPPURPLE,
+  INDIGO,
+  BLUE,
+  LIGHTBLUE,
+  CYAN,
+  TEAL,
+  GREEN,
+  LIGHTGREEN,
+  LIME,
+  YELLOW,
+  AMBER,
+  ORANGE,
+  DEEPORANGE
 };
 
 
@@ -56,6 +72,7 @@ class Window {
   void print(int x, int y, std::string s, Color c) const;
   void print(int x, int y, char s, Color c) const;
   void print(int x, int y, Color c) const;
+  void print(int x, int y, int z, Color c) const;
   void print(int x, int y, std::string s) const;
   void print(int x, int y, char s) const;
 
