@@ -1,0 +1,6 @@
+#include "window.h"
+
+Piece::Piece(int coord, Color col) {
+  coordinates = coord;
+  colorPiece = col;
+}
