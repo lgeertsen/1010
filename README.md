@@ -10,6 +10,10 @@ git commit -m "*message qui explique les changements*"
 git push
 ```
 
+copier dossier sur nouvelle machine
+```bash
+git clone https://github.com/lgeertsen/1010.git
+```
 
 ## Compiler
 ```bash
