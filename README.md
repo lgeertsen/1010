@@ -17,5 +17,5 @@ git clone https://github.com/lgeertsen/1010.git
 
 ## Compiler
 ```bash
-g++ -Wall -ansi -pedantic -lncurses main.cpp -o 1010
+g++ -Wall -ansi -pedantic main.cpp window.cpp *+tout autres classes* -lncurses -o 1010
 ```
