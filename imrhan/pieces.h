@@ -1,6 +1,7 @@
 #ifndef __PIECE_H
 #define __PIECE_H
 #include "window.h"
+#include "shapes.h"
 
 class piece {
 
@@ -10,13 +11,6 @@ unsigned int x,y,kind;
 Color color;
 
 public:
-
-enum Color
-{ 	Black,
-	Blue, 
-	Green,
-	Yellow,
-	Red,};
 
 //Constructeurs
 Piece();
@@ -35,3 +29,6 @@ void setX(unsigned int);
 void setY(unsigned int);
 void setKind(unsigned int);
 void setColor(unsigned int);
+
+}
+#endif
