@@ -55,7 +55,7 @@ class Window {
   void print(int x, int y, char s, Color c) const;
   void print(int x, int y, Color c) const;
   void print(int x, int y, std::string s) const;
-  void print(int x, int y, char s) const; 
+  void print(int x, int y, char s) const;
 
   
   // accesseurs
