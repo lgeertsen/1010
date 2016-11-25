@@ -87,6 +87,9 @@ void init_colors(void)
   init_color(43, 749, 211, 47);
   init_color(44, 1000, 341, 133);
   init_pair(DEEPORANGE, 43, 44);
+
+  init_pair(REDT, 13, 11);
+  init_pair(YELLOWT, 37, 11);
 }
 
 
@@ -145,9 +148,15 @@ void Window::print(int x, int y, std::string s, Color c) const {
   wattroff(win,COLOR_PAIR(c));
   update();  
 }
+void Window::printBold(int x, int y, std::string s, Color c) const {
+  wattron(win,COLOR_PAIR(c));
+  mvwprintw(win,y,x,s.c_str());
+  wattroff(win,COLOR_PAIR(c));
+  update();  
+}
 void Window::print(int x, int y, char s, Color c) const{
   wattron(win,COLOR_PAIR(c));
-  mvwaddch(win,y,x,s);
+  mvwaddch(win,y,x,s | A_BOLD);
   wattroff(win,COLOR_PAIR(c));
   update();
 }

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 export TERM=xterm-256color
-resize -s 34 64
+resize -s 43 66

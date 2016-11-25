@@ -3,21 +3,38 @@
 #include "gameUI.h"
 
 GameUI::GameUI(Piece p): piece(p) {
-  game = new Window(20,40,0,0);
-  game->setCouleurFenetre(CLOUD);
-  game->setCouleurBordure(MIDNIGHT);
-  help = new Window(10,20,42,22);
-  help->setCouleurFenetre(CLOUD);
-  help->setCouleurBordure(MIDNIGHT);
-  score = new Window(5,20,42,0);
+  score = new Window(7,20,0,0);
   score->setCouleurFenetre(CLOUD);
   score->setCouleurBordure(MIDNIGHT);
-  highscore = new Window(13,20,42,7);
+
+  crown = new Window(7,20,22,0);
+  crown->setCouleurFenetre(CLOUD);
+  crown->setCouleurBordure(MIDNIGHT);
+  crown->printBold(5, 1, "/\\  /\\  /\\", YELLOWT);
+  crown->printBold(4, 2, "/  \\/  \\/  \\", YELLOWT);
+  crown->printBold(4, 3, "|          |", YELLOWT);
+  crown->printBold(5, 3, " * * * * *", REDT);
+  crown->printBold(4, 4, "|__________|", YELLOWT);
+
+  highscore = new Window(7,20,44,0);
   highscore->setCouleurFenetre(CLOUD);
   highscore->setCouleurBordure(MIDNIGHT);
-  blocks = new Window(10,40,0,22);
+  
+  game = new Window(20,40,0,9);
+  game->setCouleurFenetre(CLOUD);
+  game->setCouleurBordure(MIDNIGHT);
+
+  blocks = new Window(10,64,0,31);
   blocks->setCouleurFenetre(CLOUD);
   blocks->setCouleurBordure(MIDNIGHT);
+  
+  highscores = new Window(11,22,42,9);
+  highscores->setCouleurFenetre(CLOUD);
+  highscores->setCouleurBordure(MIDNIGHT);
+  
+  help = new Window(7,22,42,22);
+  help->setCouleurFenetre(CLOUD);
+  help->setCouleurBordure(MIDNIGHT);
 }
 
 void GameUI::printPiece() {
