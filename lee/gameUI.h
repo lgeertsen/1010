@@ -6,7 +6,7 @@
 
 class GameUI {
  private:
-  Window *game, *help, *score, *highscore, *blocks;
+  Window *game, *help, *score, *highscore, *highscores, *crown, *blocks;
   Piece piece;
 
  public:
