@@ -7,16 +7,10 @@ extern "C" {
 
 #include "window.h"
 #include "piece.h"
+#include "gameUI.h"
 
 void myprogram() {
   int input;
-  int h=20, w=40;
-  Window playField(h,w,10,10);
-  
-  playField.setCouleurBordure(BGREEN);
-
-  int x=w/2,y=h/2;
-  playField.print(x,y,WCYAN);
 
   int s = 3;
   Coordinates *c = new Coordinates[3];
@@ -27,10 +21,10 @@ void myprogram() {
   c[2].x = 2;
   c[2].y = 0;
 
-  Piece piece(s, c, BGREEN);
+  Piece piece(s, c, DEEPORANGE);
 
-  int n = piece.getX(2);
-  std::cout<<n<<std::endl;
+  GameUI gameUI(piece);
+  gameUI.printPiece();
 
   while((input = getch()) != 'q') {
     

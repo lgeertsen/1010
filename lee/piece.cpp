@@ -12,6 +12,10 @@ Piece::Piece(int s, Coordinates *c, Color col) {
   colorPiece = col;
 }
 
+int Piece::getSize() {
+  return size;
+}
+
 int Piece::getX(int n) {
   return coord[n].x;
 }

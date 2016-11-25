@@ -18,6 +18,8 @@ class Piece {
  public:
   Piece(int s, Coordinates *c, Color col);
 
+  int getSize();
+
   int getX(int n);
   int getY(int n);
 

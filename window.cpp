@@ -4,6 +4,7 @@
 void init_colors(void)
 {
   start_color();
+  init_color(BBLUE, 700, 0, 0);
   init_pair(WBLACK,   COLOR_WHITE, COLOR_BLACK);
   init_pair(WCYAN,    COLOR_WHITE, COLOR_CYAN);
   init_pair(WBLUE,    COLOR_WHITE, COLOR_BLUE);
