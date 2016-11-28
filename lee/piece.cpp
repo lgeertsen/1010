@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+Piece::Piece() {}
+
 Piece::Piece(int s, Coordinates *c, Color col) {
   size = s;
   coord = new Coordinates[s];

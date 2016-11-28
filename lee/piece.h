@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-struct Coordinates{
+struct Coordinates {
   int x, y;
 };
 
@@ -16,6 +16,7 @@ class Piece {
   Color colorPiece;
 
  public:
+  Piece();
   Piece(int s, Coordinates *c, Color col);
 
   int getSize();
