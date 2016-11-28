@@ -26,7 +26,8 @@ void Game::start() {
   getRandomPieces();
   pointer.x = 0;
   pointer.y = 0;
-  gameUI.printPointer(game, pointer.x, pointer.y, RED);
+  placeable = true;
+  gameUI.printPointer(game, pointer.x, pointer.y, LIGHTGREEN);
   prompt();
 }
 
@@ -35,49 +36,42 @@ void Game::prompt() {
   while((input = getch()) != 'q') {
     switch (input) {
     case 'a':
-      if(selectedPiece != 0) {
+      if(piecesToPlay[0] != -1 && selectedPiece != 0) {
         selectPiece(0);
       }
       break;
     case 'z':
-      if(selectedPiece != 1) {
+      if(piecesToPlay[1] != -1 && selectedPiece != 1) {
         selectPiece(1);
       }
       break;
     case 'e':
-      if(selectedPiece != 2) {
+      if(piecesToPlay[2] != -1 && selectedPiece != 2) {
         selectPiece(2);
       }
       break;
-    case 'p':
-      gameUI.printPiece(game, pieces[piecesToPlay[selectedPiece]], pointer.x, pointer.y);
+    case ' ':
+      if(placeable)
+        putPiece();
       break;
     case KEY_UP:
       if(pointer.y > 0) {
-        gameUI.printPointer(game, pointer.x, pointer.y, CLOUD);
-        pointer.y--;
-        gameUI.printPointer(game, pointer.x, pointer.y, RED);
+      	movePointer(0, -1);
       }
     	break;
     case KEY_DOWN:
       if(pointer.y < 9) {
-        gameUI.printPointer(game, pointer.x, pointer.y, CLOUD);
-        pointer.y++;
-        gameUI.printPointer(game, pointer.x, pointer.y, RED);
+      	movePointer(0, 1);
       }
     	break;
     case KEY_LEFT:
       if(pointer.x > 0) {
-        gameUI.printPointer(game, pointer.x, pointer.y, CLOUD);
-        pointer.x--;
-        gameUI.printPointer(game, pointer.x, pointer.y, RED);
+      	movePointer(-1, 0);
       }
     	break;
     case KEY_RIGHT:
       if(pointer.x < 9) {
-        gameUI.printPointer(game, pointer.x, pointer.y, CLOUD);
-        pointer.x++;
-        gameUI.printPointer(game, pointer.x, pointer.y, RED);
+      	movePointer(1, 0);
       }
     	break;
     }
@@ -137,11 +131,39 @@ void Game::showScore() {
   gameUI.showScore(scoreField, score);
 }
 
+void Game::movePointer(int x, int y) {
+  int n = board[pointer.x][pointer.y];
+  if(n != 0)
+    gameUI.printPart(game, pointer.x*4, pointer.y*2, getColor(n));
+  else
+    gameUI.printPointer(game, pointer.x, pointer.y, CLOUD);
+  pointer.x += x;
+  pointer.y += y;
+  placeablePointer();
+}
+
+void Game::placeablePointer() {
+  int i = 0;
+  Piece p = pieces[piecesToPlay[selectedPiece]];
+  placeable = true;
+  while(placeable && i < p.getSize()) {
+    int x = pointer.x + p.getX(i);
+    int y = pointer.y + p.getY(i);
+    if(x > 9 || y > 9 || board[x][y] != 0)
+      placeable = false;
+    i++;
+  }
+  if(placeable)
+    gameUI.printPointer(game, pointer.x, pointer.y, LIGHTGREEN);
+  else
+    gameUI.printPointer(game, pointer.x, pointer.y, RED);
+}
+
 void Game::getRandomPieces() {
   int *n = getRandomNumbers();
   for(int i = 0; i < 3; i++) {
     piecesToPlay[i] = n[i];
-    gameUI.printPiece(blocks[i], pieces[n[i]], 1, 1);
+    gameUI.printPiece(blocks[i], pieces[n[i]], 0.25, 0.5);
   }
 }
 
@@ -157,8 +179,96 @@ int* Game::getRandomNumbers() {
 
 void Game::selectPiece(int n) {
   gameUI.changeBorder(blocks[selectedPiece], MIDNIGHT);
-  if(piecesToPlay[n] != -1) {
-    selectedPiece = n;
-    gameUI.changeBorder(blocks[selectedPiece], RED);
+  selectedPiece = n;
+  gameUI.changeBorder(blocks[selectedPiece], RED);
+  placeablePointer();
+}
+
+void Game::putPiece(){
+  Piece p = pieces[piecesToPlay[selectedPiece]];
+  for(int i = 0; i < p.getSize(); i++) {
+    int x = pointer.x + p.getX(i);
+    int y = pointer.y + p.getY(i);
+    board[x][y] = p.getColorId();
   }
+  gameUI.printPiece(game, p, pointer.x, pointer.y);
+
+  for(int c = 0; c < p.getSize(); c++) {
+    float X = 0.25 + p.getX(c);
+    float Y = 0.5 + p.getY(c);
+    gameUI.printPointer(blocks[selectedPiece], X, Y, CLOUD);
+  }
+  gameUI.fill(blocks[selectedPiece], CLOUD);
+  piecesToPlay[selectedPiece] = -1;
+  bool selected = false;
+  int i = 0;
+  while(!selected && i < 3) {
+    if(piecesToPlay[i] != -1) {
+      selectPiece(i);
+      selected = true;
+    }
+    i++;
+  }
+  if(!selected) {
+    getRandomPieces();
+    selectPiece(0);
+  }
+}
+
+Color Game::getColor(int n) {
+  Color c;
+  switch (n) {
+    case 0:
+      c = CLOUD;
+      break;
+    case 1:
+      c = RED;
+      break;
+    case 2:
+      c = PINK;
+      break;
+    case 3:
+      c = PURPLE;
+      break;
+    case 4:
+      c = DEEPPURPLE;
+      break;
+    case 5:
+      c = INDIGO;
+      break;
+    case 6:
+      c = BLUE;
+      break;
+    case 7:
+      c = LIGHTBLUE;
+      break;
+    case 8:
+      c = CYAN;
+      break;
+    case 9:
+      c = TEAL;
+      break;
+    case 10:
+      c = GREEN;
+      break;
+    case 11:
+      c = LIGHTGREEN;
+      break;
+    case 12:
+      c = LIME;
+      break;
+    case 13:
+      c = YELLOW;
+      break;
+    case 14:
+      c = AMBER;
+      break;
+    case 15:
+      c = ORANGE;
+      break;
+    case 16:
+      c = DEEPORANGE;
+      break;
+  }
+  return c;
 }

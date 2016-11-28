@@ -16,14 +16,16 @@ class GameUI {
  public:
   GameUI();
 
-  void printPiece(Window *w, Piece p, int x, int y);
-  void printPointer(Window *w, int x, int y, Color c);
+  void printPiece(Window *w, Piece p, float x, float y);
+  void printPart(Window *w, float x, float y, Color c);
+  void printPointer(Window *w, float x, float y, Color c);
 
   void showScore(Window *w, int n);
 
   void printNumber(Window *w, Number n, int x);
 
   void changeBorder(Window *w, Color c);
+  void fill(Window *w, Color c);
 };
 
 #endif

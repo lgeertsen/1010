@@ -11,19 +11,19 @@ struct Coordinates {
 
 class Piece {
  private:
-  int size;
+  int size, colorId;
   Coordinates *coord;
-  Color colorPiece;
 
  public:
   Piece();
-  Piece(int s, Coordinates *c, Color col);
+  Piece(int s, Coordinates *c, int color);
 
   int getSize();
 
   int getX(int n);
   int getY(int n);
 
+  int getColorId();
   Color getColor();
 };
 

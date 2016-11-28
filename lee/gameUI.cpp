@@ -27,35 +27,40 @@ GameUI::GameUI() {
   infile.close();
 }
 
-void GameUI::printPiece(Window *w, Piece p, int x, int y) {
+void GameUI::printPiece(Window *w, Piece p, float x, float y) {
   for(int c = 0; c < p.getSize(); c++) {
     int X = (x + p.getX(c)) * 4;
     int Y = (y + p.getY(c)) * 2;
-    for(int i = 0; i < 4; i++) {
-      for(int j = 0; j < 2; j++) {
-      	int n;
-      	if(j == 0) {
-      	  if(i == 0)
-      	    n = 1;
-      	  else if(i == 3)
-      	    n = 2;
-      	  else
-      	    n = 5;
-      	} else {
-      	  if(i == 0)
-      	    n = 3;
-      	  else if(i == 3)
-      	    n = 4;
-      	  else
-      	    n = 5;
-      	}
-      	w->print(X+i, Y+j, n, p.getColor());
+    printPart(w, X, Y, p.getColor());
+  }
+}
+
+void GameUI::printPart(Window *w, float x, float y, Color c) {
+  for(int i = 0; i < 4; i++) {
+    for(int j = 0; j < 2; j++) {
+      int n;
+      if(j == 0) {
+        if(i == 0)
+          n = 1;
+        else if(i == 3)
+          n = 2;
+        else
+          n = 5;
+      } else {
+        if(i == 0)
+          n = 3;
+        else if(i == 3)
+          n = 4;
+        else
+          n = 5;
       }
+      w->print(x+i, y+j, n, c);
     }
   }
 }
 
-void GameUI::printPointer(Window *w, int x, int y, Color c) {
+
+void GameUI::printPointer(Window *w, float x, float y, Color c) {
   int X = x * 4;
   int Y = y * 2;
   for(int i = 0; i < 4; i++) {
@@ -93,4 +98,8 @@ void GameUI::printNumber(Window *w, Number n, int x) {
 
 void GameUI::changeBorder(Window *w, Color c) {
   w->setCouleurBordure(c);
+}
+
+void GameUI::fill(Window *w, Color c) {
+  w->setCouleurFenetre(c);
 }

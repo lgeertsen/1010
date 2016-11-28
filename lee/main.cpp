@@ -13,60 +13,60 @@ extern "C" {
 
 using namespace std;
 
-Color getColor(int x) {
-  Color c;
-  switch (x) {
-    case 1:
-      c = RED;
-      break;
-    case 2:
-      c = PINK;
-      break;
-    case 3:
-      c = PURPLE;
-      break;
-    case 4:
-      c = DEEPPURPLE;
-      break;
-    case 5:
-      c = INDIGO;
-      break;
-    case 6:
-      c = BLUE;
-      break;
-    case 7:
-      c = LIGHTBLUE;
-      break;
-    case 8:
-      c = CYAN;
-      break;
-    case 9:
-      c = TEAL;
-      break;
-    case 10:
-      c = GREEN;
-      break;
-    case 11:
-      c = LIGHTGREEN;
-      break;
-    case 12:
-      c = LIME;
-      break;
-    case 13:
-      c = YELLOW;
-      break;
-    case 14:
-      c = AMBER;
-      break;
-    case 15:
-      c = ORANGE;
-      break;
-    case 16:
-      c = DEEPORANGE;
-      break;
-  }
-  return c;
-}
+//Color getColor(int x) {
+//  Color c;
+//  switch (x) {
+//    case 1:
+//      c = RED;
+//      break;
+//    case 2:
+//      c = PINK;
+//      break;
+//    case 3:
+//      c = PURPLE;
+//      break;
+//    case 4:
+//      c = DEEPPURPLE;
+//      break;
+//    case 5:
+//      c = INDIGO;
+//      break;
+//    case 6:
+//      c = BLUE;
+//      break;
+//    case 7:
+//      c = LIGHTBLUE;
+//      break;
+//    case 8:
+//      c = CYAN;
+//      break;
+//    case 9:
+//      c = TEAL;
+//      break;
+//    case 10:
+//      c = GREEN;
+//      break;
+//    case 11:
+//      c = LIGHTGREEN;
+//      break;
+//    case 12:
+//      c = LIME;
+//      break;
+//    case 13:
+//      c = YELLOW;
+//      break;
+//    case 14:
+//      c = AMBER;
+//      break;
+//    case 15:
+//      c = ORANGE;
+//      break;
+//    case 16:
+//      c = DEEPORANGE;
+//      break;
+//  }
+//  return c;
+//}
 
 void myprogram() {
   char data[3];
@@ -86,7 +86,7 @@ void myprogram() {
       c[j].y = atoi(&data[0]);
     }
     infile>>data;
-    Piece piece(s, c, getColor(atoi(&data[0])));
+    Piece piece(s, c, atoi(&data[0]));
     p[i] = piece;
   }
   infile.close();
