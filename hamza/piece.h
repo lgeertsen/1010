@@ -5,25 +5,25 @@
 
 #include <iostream>
 
-struct Coordinates {
-  int x, y;
+struct Coordinates{
+  unsigned int x, y;
 };
 
 class Piece {
  private:
-  int size, colorId;
+  int size;
   Coordinates *coord;
+  Color colorPiece;
 
  public:
-  Piece();
-  Piece(int s, Coordinates *c, int color);
+  Piece(int s, Coordinates *c, Color col);
+  Piece(const char* filename);
 
   int getSize();
 
   int getX(int n);
   int getY(int n);
 
-  int getColorId();
   Color getColor();
 };
 

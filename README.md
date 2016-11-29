@@ -4,9 +4,9 @@
 
 aller dans le dossier 1010
 ```bash
-git pull
 git add -A
 git commit -m "*message qui explique les changements*"
+git pull
 git push
 ```
 
