@@ -22,6 +22,8 @@ class Piece {
 
   int getX(int n);
   int getY(int n);
+  int getWidth();
+  int getHeight();
 
   int getColorId();
   Color getColor();

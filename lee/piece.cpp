@@ -26,6 +26,24 @@ int Piece::getY(int n) {
   return coord[n].y;
 }
 
+int Piece::getWidth() {
+  int n = 0;
+  for(int i = 0; i < getSize(); i++) {
+    if(n < getX(i))
+      n = getX(i);
+  }
+  return n+1;
+}
+
+int Piece::getHeight() {
+  int n = 0;
+  for(int i = 0; i < getSize(); i++) {
+    if(n < getY(i))
+      n = getY(i);
+  }
+  return n+1;
+}
+
 int Piece::getColorId() {
   return colorId;
 }

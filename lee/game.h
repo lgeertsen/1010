@@ -9,6 +9,7 @@ class Game {
  private:
   int score, piecesCount, selectedPiece;
   int board[10][10], piecesToPlay[3];
+  static int points[6];
   bool placeable;
   Window *game, *help, *scoreField, *highscore, *highscores, *crown, *blocks[3];
   GameUI gameUI;
@@ -19,6 +20,8 @@ class Game {
   Game(int n, Piece *p, GameUI ui);
 
   void start();
+  void restart();
+  void initialize();
   void prompt();
 
   void createWindows();
@@ -27,7 +30,9 @@ class Game {
 
   void movePointer(int x, int y);
 
-  void placeablePointer();
+  void removePointer();
+
+  void placePointer();
 
   void getRandomPieces();
 
@@ -36,6 +41,14 @@ class Game {
   void selectPiece(int n);
 
   void putPiece();
+
+  int checkColumns(int x, int w);
+  int checkRows(int y, int h);
+
+  void deleteColRow(int x, int y, int w, int h);
+
+  void deleteColumn(int x);
+  void deleteRow(int y);
 
   Color getColor(int n);
 };

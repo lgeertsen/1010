@@ -5,30 +5,56 @@
 
 #include <cstdlib>
 
+int Game::points[] = {10, 25, 45, 60, 75, 90};
+
 Game::Game(int n, Piece *p, GameUI ui): piecesCount(n), gameUI(ui) {
   pieces = new Piece[n];
   for(int i = 0; i < n; i++) {
     pieces[i] = p[i];
   }
 
-  score = 789;
+  score = 0;
   for(int i = 0; i < 10; i++) {
     for(int j = 0; j < 10; j++) {
       board[i][j] = 0;
     }
   }
+  createWindows();
 }
 
 void Game::start() {
-  createWindows();
+  initialize();
+  prompt();
+}
+
+void Game::restart() {
+  selectPiece(0);
+  score = 0;
+  for(int i = 0; i < 10; i++) {
+    for(int j = 0; j < 10; j++) {
+      board[i][j] = 0;
+      gameUI.printPointer(game, i, j, CLOUD);
+    }
+  }
+  for(int i = 0; i < 3; i++) {
+    Piece p = pieces[piecesToPlay[i]];
+    for(int c = 0; c < p.getSize(); c++) {
+      float X = 0.25 + p.getX(c);
+      float Y = 0.5 + p.getY(c);
+      gameUI.printPointer(blocks[i], X, Y, CLOUD);
+    }
+  }
+  initialize();
+}
+
+void Game::initialize() {
   showScore();
   selectedPiece = 0;
   getRandomPieces();
   pointer.x = 0;
   pointer.y = 0;
   placeable = true;
-  gameUI.printPointer(game, pointer.x, pointer.y, LIGHTGREEN);
-  prompt();
+  placePointer();
 }
 
 void Game::prompt() {
@@ -58,22 +84,25 @@ void Game::prompt() {
       if(pointer.y > 0) {
       	movePointer(0, -1);
       }
-    	break;
+      break;
     case KEY_DOWN:
-      if(pointer.y < 9) {
+      if(pointer.y < 10 - pieces[piecesToPlay[selectedPiece]].getHeight()) {
       	movePointer(0, 1);
       }
-    	break;
+      break;
     case KEY_LEFT:
       if(pointer.x > 0) {
       	movePointer(-1, 0);
       }
-    	break;
+      break;
     case KEY_RIGHT:
-      if(pointer.x < 9) {
+      if(pointer.x < 10 - pieces[piecesToPlay[selectedPiece]].getWidth()) {
       	movePointer(1, 0);
       }
-    	break;
+      break;
+    case 'r':
+      restart();
+      break;
     }
   }
 }
@@ -132,17 +161,26 @@ void Game::showScore() {
 }
 
 void Game::movePointer(int x, int y) {
-  int n = board[pointer.x][pointer.y];
-  if(n != 0)
-    gameUI.printPart(game, pointer.x*4, pointer.y*2, getColor(n));
-  else
-    gameUI.printPointer(game, pointer.x, pointer.y, CLOUD);
+  removePointer();
   pointer.x += x;
   pointer.y += y;
-  placeablePointer();
+  placePointer();
 }
 
-void Game::placeablePointer() {
+void Game::removePointer() {
+  Piece p = pieces[piecesToPlay[selectedPiece]];
+  for(int i = 0; i < p.getSize(); i++) {
+    int x = pointer.x + p.getX(i);
+    int y = pointer.y + p.getY(i);
+    int n = board[x][y];
+    if(n != 0)
+      gameUI.printPart(game, x*4, y*2, getColor(n));
+    else
+      gameUI.printPointer(game, x, y, CLOUD);
+  }
+}
+
+void Game::placePointer() {
   int i = 0;
   Piece p = pieces[piecesToPlay[selectedPiece]];
   placeable = true;
@@ -153,10 +191,15 @@ void Game::placeablePointer() {
       placeable = false;
     i++;
   }
-  if(placeable)
-    gameUI.printPointer(game, pointer.x, pointer.y, LIGHTGREEN);
-  else
-    gameUI.printPointer(game, pointer.x, pointer.y, RED);
+  for(int i = 0; i < p.getSize(); i++) {
+    int x = pointer.x + p.getX(i);
+    int y = pointer.y + p.getY(i);
+    if(placeable)
+      gameUI.printPointer(game, x, y, LIGHTGREEN);
+    else
+      gameUI.printPointer(game, x, y, RED);
+  }
+  
 }
 
 void Game::getRandomPieces() {
@@ -179,9 +222,10 @@ int* Game::getRandomNumbers() {
 
 void Game::selectPiece(int n) {
   gameUI.changeBorder(blocks[selectedPiece], MIDNIGHT);
+  removePointer();
   selectedPiece = n;
   gameUI.changeBorder(blocks[selectedPiece], RED);
-  placeablePointer();
+  placePointer();
 }
 
 void Game::putPiece(){
@@ -192,6 +236,25 @@ void Game::putPiece(){
     board[x][y] = p.getColorId();
   }
   gameUI.printPiece(game, p, pointer.x, pointer.y);
+  score += p.getSize();
+
+  int c = checkColumns(pointer.x, p.getWidth());
+  int r = checkRows(pointer.y, p.getHeight());
+
+  if(c != 0 || r != 0) {
+    if(c == 0) {
+      score += points[r-1];
+    }
+    else if(r == 0) {
+      score += points[c-1];
+    }
+    else {
+      score += 2 * (points[c-1] + points[r-1]);
+    }
+    deleteColRow(pointer.x, pointer.y, p.getWidth(), p.getHeight());
+  }
+
+  showScore();
 
   for(int c = 0; c < p.getSize(); c++) {
     float X = 0.25 + p.getX(c);
@@ -212,6 +275,108 @@ void Game::putPiece(){
   if(!selected) {
     getRandomPieces();
     selectPiece(0);
+  }
+}
+
+int Game::checkColumns(int x, int w) {
+  int n = 0;
+  for(int i = 0; i < w; i++) {
+    bool loop = true;
+    int j = 0;
+    while(loop && j < 10) {
+      if(board[x+i][j] == 0)
+        loop = false;
+      j++;
+    }
+    if(loop)
+      n++;
+  }
+  return n;
+}
+
+int Game::checkRows(int y, int h) {
+  int n = 0;
+  for(int i = 0; i < h; i++) {
+    bool loop = true;
+    int j = 0;
+    while(loop && j < 10) {
+      if(board[j][y+i] == 0)
+        loop = false;
+      j++;
+    }
+    if(loop)
+      n++;
+  }
+  return n;
+}
+
+void Game::deleteColRow(int x, int y, int w, int h) {
+  bool loop, loop2;
+  if(w > 0) {
+    loop = true;
+    int i = 0;
+    while(loop && i < 10) {
+      if(board[x][i] == 0)
+        loop = false;
+      i++;
+    }
+  }
+  if(h > 0) {
+    loop2 = true;
+    int i = 0;
+    while(loop2 && i < 10) {
+      if(board[i][y] == 0)
+        loop2 = false;
+      i++;
+    }
+  }
+  if(w-1 > 0 || h-1 > 0)
+    deleteColRow(x+1, y+1, w-1, h-1);
+  if(loop)
+    deleteColumn(x);
+  if(loop2)
+    deleteRow(y);
+
+//  for(int i = 0; i < w; i++) {
+//    bool loop = true;
+//    int j = 0;
+//    while(loop && j < 10) {
+//      if(board[x+i][j] == 0)
+//        loop = false;
+//      j++;
+//    }
+//    for(int k = 0; k < h; k++) {
+//      bool loop2 = true;
+//      int l = 0;
+//      while(loop2 && l < 10) {
+//        if(board[l][y+k] == 0)
+//          loop2 = false;
+//        l++;
+//      }
+//      if(loop2) {
+//        deleteColRow(x+i+1, y+k+1, w-i-1, h-k-1);
+//        deleteRow(y+k);
+//      }
+//    }
+//    if(loop) {
+//      deleteColumn(x+i);
+//    }
+//  }
+}
+
+void Game::deleteColumn(int x) {
+  std::cout<<"Deleted colum "<<x<<std::endl;
+  for(int i = 0; i < 10; i++) {
+    board[x][i] = 0;
+    gameUI.printPointer(game, x, i, CLOUD);
+  }
+}
+
+void Game::deleteRow(int y) {
+  std::cout<<"Deleted row "<<y<<std::endl;
+  for(int i = 0; i < 10; i++) {
+    board[i][y] = 0;
+    gameUI.printPointer(game, i, y, CLOUD);
   }
 }
 
