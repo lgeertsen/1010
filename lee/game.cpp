@@ -13,7 +13,7 @@ Game::Game(int n, Piece *p, GameUI ui): piecesCount(n), gameUI(ui) {
     pieces[i] = p[i];
   }
 
-  score = 0;
+  score = 823456;
   for(int i = 0; i < 10; i++) {
     for(int j = 0; j < 10; j++) {
       board[i][j] = 0;
@@ -108,20 +108,20 @@ void Game::prompt() {
 }
 
 void Game::createWindows() {
-  scoreField = new Window(7,25,0,0);
+  scoreField = new Window(7,48,0,0);
   scoreField->setCouleurFenetre(CLOUD);
   scoreField->setCouleurBordure(MIDNIGHT);
 
-  crown = new Window(7,16,27,0);
+  crown = new Window(7,13,50,0);
   crown->setCouleurFenetre(CLOUD);
   crown->setCouleurBordure(MIDNIGHT);
-  crown->printBold(3, 1, "/\\  /\\  /\\", YELLOWT);
-  crown->printBold(2, 2, "/  \\/  \\/  \\", YELLOWT);
-  crown->printBold(2, 3, "|          |", YELLOWT);
-  crown->printBold(3, 3, " * * * * *", REDT);
-  crown->printBold(2, 4, "|__________|", YELLOWT);
+  //crown->printBold(2, 1, "/\\    /\\", YELLOWT);
+  crown->printBold(1, 2, "/\\/\\/\\/\\/\\", YELLOWT);
+  crown->printBold(1, 3, "|        |", YELLOWT);
+  crown->printBold(2, 3, " * * * *", REDT);
+  crown->printBold(1, 4, "|________|", YELLOWT);
 
-  highscore = new Window(7,25,45,0);
+  highscore = new Window(7,48,64,0);
   highscore->setCouleurFenetre(CLOUD);
   highscore->setCouleurBordure(MIDNIGHT);
 
@@ -130,9 +130,9 @@ void Game::createWindows() {
   game->setCouleurFenetre(CLOUD);
   game->setCouleurBordure(MIDNIGHT);
 
-  Window *block1 = new Window(12,22,0,31);
-  Window *block2 = new Window(12,22,24,31);
-  Window *block3 = new Window(12,22,48,31);
+  Window *block1 = new Window(12,22,42,17);
+  Window *block2 = new Window(12,22,66,17);
+  Window *block3 = new Window(12,22,90,17);
 
   blocks[0] = block1;
   blocks[1] = block2;
@@ -144,13 +144,13 @@ void Game::createWindows() {
   blocks[2]->setCouleurFenetre(CLOUD);
   blocks[2]->setCouleurBordure(MIDNIGHT);
 
-  highscores = new Window(11,28,42,9);
+  highscores = new Window(6,46,42,9);
   highscores->setCouleurFenetre(CLOUD);
   highscores->setCouleurBordure(MIDNIGHT);
   highscores->print(1, 1, "Highscores");
   highscores->print(1, 2, "__________");
 
-  help = new Window(7,28,42,22);
+  help = new Window(6,22,90,9);
   help->setCouleurFenetre(CLOUD);
   help->setCouleurBordure(MIDNIGHT);
   help->print(1, 1, "q: quit");
@@ -225,6 +225,12 @@ void Game::selectPiece(int n) {
   removePointer();
   selectedPiece = n;
   gameUI.changeBorder(blocks[selectedPiece], RED);
+  int x = 10 - pieces[piecesToPlay[selectedPiece]].getWidth();
+  int y = 10 - pieces[piecesToPlay[selectedPiece]].getHeight();
+  if(pointer.x > x)
+    pointer.x = x;
+  if(pointer.y > y)
+    pointer.y = y;
   placePointer();
 }
 
@@ -336,36 +342,9 @@ void Game::deleteColRow(int x, int y, int w, int h) {
     deleteColumn(x);
   if(loop2)
     deleteRow(y);
-
-//  for(int i = 0; i < w; i++) {
-//    bool loop = true;
-//    int j = 0;
-//    while(loop && j < 10) {
-//      if(board[x+i][j] == 0)
-//        loop = false;
-//      j++;
-//    }
-//    for(int k = 0; k < h; k++) {
-//      bool loop2 = true;
-//      int l = 0;
-//      while(loop2 && l < 10) {
-//        if(board[l][y+k] == 0)
-//          loop2 = false;
-//        l++;
-//      }
-//      if(loop2) {
-//        deleteColRow(x+i+1, y+k+1, w-i-1, h-k-1);
-//        deleteRow(y+k);
-//      }
-//    }
-//    if(loop) {
-//      deleteColumn(x+i);
-//    }
-//  }
 }
 
 void Game::deleteColumn(int x) {
-  std::cout<<"Deleted colum "<<x<<std::endl;
   for(int i = 0; i < 10; i++) {
     board[x][i] = 0;
     gameUI.printPointer(game, x, i, CLOUD);
@@ -373,7 +352,6 @@ void Game::deleteColumn(int x) {
 }
 
 void Game::deleteRow(int y) {
-  std::cout<<"Deleted row "<<y<<std::endl;
   for(int i = 0; i < 10; i++) {
     board[i][y] = 0;
     gameUI.printPointer(game, i, y, CLOUD);

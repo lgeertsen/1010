@@ -89,7 +89,7 @@ void GameUI::showScore(Window *w, int n) {
 
 void GameUI::printNumber(Window *w, Number n, int x) {
   for(int i = 0; i < n.size; i++) {
-    int X = (18 - (x * 8)) + n.coord[i].x * 2;
+    int X = (41 - (x * 8)) + n.coord[i].x * 2;
     int Y = 1 + n.coord[i].y;
     for(int j = 0; j < 2; j++) {
       w->print(X+j, Y, LIGHTGREEN);
