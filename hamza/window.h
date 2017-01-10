@@ -19,9 +19,29 @@ enum Color {
   BCYAN,   // couleur fond = cyan,    couleur texte = noir
   BBLUE,   // couleur fond = bleu,    couleur texte = noir
   BYELLOW, // couleur fond = jaune,   couleur texte = noir
-  BGREEN,  // couleur fond = vert,    couleur texte = noir 
+  BGREEN,  // couleur fond = vert,    couleur texte = noir
   BMAGENTA,// couleur fond = magenta, couleur texte = noir
   BRED,    // couleur fond = rouge,   couleur texte = noir
+  CLOUD,
+  MIDNIGHT,
+  RED,
+  PINK,
+  PURPLE,
+  DEEPPURPLE,
+  INDIGO,
+  BLUE,
+  LIGHTBLUE,
+  CYAN,
+  TEAL,
+  GREEN,
+  LIGHTGREEN,
+  LIME,
+  YELLOW,
+  AMBER,
+  ORANGE,
+  DEEPORANGE,
+  REDT,
+  YELLOWT
 };
 
 
@@ -42,6 +62,7 @@ class Window {
 
  public:
 
+  Window();
   // constructeur d'un fenetre de hauteur=h, largeur=w dont le coin superieur gauche
   // a pour coordonnée (x,y), le caractère c est utilisé pour définir la bordure
   Window(int h,int w, int x, int y, char c='+');
@@ -52,15 +73,17 @@ class Window {
   // à la position (x,y) dans la fenetre.
   // si un couleur est spécifié l'affichage utilise cette couleur, sinon la couleur de la fenêtre est utilisée
   void print(int x, int y, std::string s, Color c) const;
+  void printBold(int x, int y, std::string s, Color c) const;
   void print(int x, int y, char s, Color c) const;
   void print(int x, int y, Color c) const;
+  void print(int x, int y, int z, Color c) const;
   void print(int x, int y, std::string s) const;
-  void print(int x, int y, char s) const; 
+  void print(int x, int y, char s) const;
 
-  
+
   // accesseurs
-  int getX() const;        // récupère l'abscisse du coin supérieur gauche de la fenêtre 
-  int getY() const;        // récupère l'ordonnée du coin supérieur gauche de la fenêtre 
+  int getX() const;        // récupère l'abscisse du coin supérieur gauche de la fenêtre
+  int getY() const;        // récupère l'ordonnée du coin supérieur gauche de la fenêtre
   int getHauteur() const ; // récupère la hauteur de la fenêtre
   int getLargeur() const ; // récupère la largeur de la fenêtre
 
