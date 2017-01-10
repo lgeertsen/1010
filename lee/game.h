@@ -10,7 +10,7 @@ class Game {
   int score, piecesCount, selectedPiece;
   int board[10][10], piecesToPlay[3];
   static int points[6];
-  bool placeable;
+  bool placeable, isgameOver;
   Window *game, *help, *scoreField, *highscore, *highscores, *crown, *blocks[3];
   GameUI gameUI;
   Piece *pieces;
@@ -21,6 +21,7 @@ class Game {
 
   void start();
   void restart();
+  void gameOver();
   void initialize();
   void prompt();
 
@@ -41,6 +42,8 @@ class Game {
   void selectPiece(int n);
 
   void putPiece();
+
+  void isGameOver();
 
   int checkColumns(int x, int w);
   int checkRows(int y, int h);

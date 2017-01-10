@@ -4,6 +4,7 @@
 #include "game.h"
 
 #include <cstdlib>
+#include <string>
 
 int Game::points[] = {10, 25, 45, 60, 75, 90};
 
@@ -13,7 +14,7 @@ Game::Game(int n, Piece *p, GameUI ui): piecesCount(n), gameUI(ui) {
     pieces[i] = p[i];
   }
 
-  score = 823456;
+  score = 0;
   for(int i = 0; i < 10; i++) {
     for(int j = 0; j < 10; j++) {
       board[i][j] = 0;
@@ -47,6 +48,18 @@ void Game::restart() {
   initialize();
 }
 
+void Game::gameOver() {
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+  std::cout<<"GAAAAAAAAAAAAAAAAAMEEEEEEEEEEEEE OVVVVVVVEEEEEEEEEEEEEE"<<std::endl;
+}
+
 void Game::initialize() {
   showScore();
   selectedPiece = 0;
@@ -54,6 +67,7 @@ void Game::initialize() {
   pointer.x = 0;
   pointer.y = 0;
   placeable = true;
+  isgameOver = false;
   placePointer();
 }
 
@@ -153,7 +167,7 @@ void Game::createWindows() {
   help = new Window(6,22,90,9);
   help->setCouleurFenetre(CLOUD);
   help->setCouleurBordure(MIDNIGHT);
-  help->print(1, 1, "q: quit");
+  //help->print(1, 1, "q: quit");
 }
 
 void Game::showScore() {
@@ -282,6 +296,46 @@ void Game::putPiece(){
     getRandomPieces();
     selectPiece(0);
   }
+
+  isGameOver();
+}
+
+void Game::isGameOver() {
+  int i = 0;
+  bool free = false;
+  while(!free && i < 10) {
+    int j = 0;
+    while(!free && j < 10) {
+      if(board[i][j] == 0) {
+        int k = 0;
+        while(!free && k < 3) {
+          int m = 0;
+          int ptp = piecesToPlay[k];
+          if(ptp >= 0 ) {
+            Piece p = pieces[piecesToPlay[k]];
+            bool place = true;
+            while(place && m < p.getSize()) {
+              int x = i + p.getX(m);
+              int y = j + p.getY(m);
+              if(x > 9 || y > 9 || board[x][y] != 0)
+                place = false;
+              m++;
+            }
+            if(place)
+                free = true;
+          }
+          k++;
+        }
+      }
+      j++;
+    }
+    i++;
+  }
+  if(!free)
+    isgameOver = true;
+
+  if(isgameOver)
+    gameOver();
 }
 
 int Game::checkColumns(int x, int w) {
