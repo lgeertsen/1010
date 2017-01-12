@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <string>
 
 extern "C" {
 #include <curses.h>
@@ -13,66 +14,8 @@ extern "C" {
 
 using namespace std;
 
-//Color getColor(int x) {
-//  Color c;
-//  switch (x) {
-//    case 1:
-//      c = RED;
-//      break;
-//    case 2:
-//      c = PINK;
-//      break;
-//    case 3:
-//      c = PURPLE;
-//      break;
-//    case 4:
-//      c = DEEPPURPLE;
-//      break;
-//    case 5:
-//      c = INDIGO;
-//      break;
-//    case 6:
-//      c = BLUE;
-//      break;
-//    case 7:
-//      c = LIGHTBLUE;
-//      break;
-//    case 8:
-//      c = CYAN;
-//      break;
-//    case 9:
-//      c = TEAL;
-//      break;
-//    case 10:
-//      c = GREEN;
-//      break;
-//    case 11:
-//      c = LIGHTGREEN;
-//      break;
-//    case 12:
-//      c = LIME;
-//      break;
-//    case 13:
-//      c = YELLOW;
-//      break;
-//    case 14:
-//      c = AMBER;
-//      break;
-//    case 15:
-//      c = ORANGE;
-//      break;
-//    case 16:
-//      c = DEEPORANGE;
-//      break;
-//  }
-//  return c;
-//}
-
-void myprogram(char name[]) {
-  char nom[10];
-  for(int i = 0; i < 10; i++) {
-    nom[i] = name[i];
-  }
+void myprogram(string name) {
+  string nom = name;
   char data[3];
   ifstream infile;
   infile.open("pieces.dat");
@@ -101,12 +44,28 @@ void myprogram(char name[]) {
   game.start();
 }
 
-int main() {
-  char name[255];
-  cout<<"Enter you name: ";
-  cin>>name;
-  startProgramX();
-  myprogram(name);
-  stopProgramX();
+int main(int argc,char* argv[]) {
+  for (int i=1;i<argc;i++){
+    if (argv[i]==string("help")){
+      ifstream aide("help.txt",ios::in);
+      string line;
+      while (getline(aide,line)){
+  cout<<line<<"\n";
+      }
+      cout<<"Bonne partie!\n"<<endl;
+    }else if (argv[i]==string("version")){
+      cout<<"Version:1.0"<<endl;
+    }else if (argv[i]==string("auteurs")){
+      cout<<"Auteurs:\n"<<"Hamza Mellouki\n"<<"Lee Geertsen\n"<<"Imrhan Dareine\n"<<"Aurelien Ambroise\n"<<endl;
+    }
+  }
+  if (argc==1){
+    string name;
+    cout<<"Enter you name: ";
+    cin>>name;
+    startProgramX();
+    myprogram(name);
+    stopProgramX();
+  }
   return 0;
 }

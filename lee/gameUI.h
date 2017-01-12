@@ -1,6 +1,10 @@
 #ifndef __GAMEUI_H
 #define __GAMEUI_H
 
+#include <string>
+
+using namespace std;
+
 #include "window.h"
 #include "piece.h"
 
@@ -27,7 +31,7 @@ class GameUI {
   void printPointer(Window *w, float x, float y, Color c);
 
   void showScore(Window *w, int n, Color c);
-  void showHighscore(Window *w, int x, int y, char name[], char score[]);
+  void showHighscore(Window *w, int x, int y, string name, char score[]);
 
   void printNumber(Window *w, Number n, int x, Color c);
 

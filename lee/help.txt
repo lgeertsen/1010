@@ -1,0 +1,6 @@
+---Utilisez les touches directionnelles pour deplacer votre piece.
+---Appuyer sur espace ou entrer pour placer la piece.
+---Appuyer sur les touches a,z et e pour selectionner la piece que vous voulez utiliser.
+---Vous pouvez recommencer votre partie en utilisant la touche r.Attention: votre score ne sera pas sauvegarder.
+---Appuyer sur la touche q pour pouvoir quitter la partie. Dans ce cas votre partie sera sauvegarder et pourra être reprise ulterieurement.
+---Enfin vous pouvez acceder a la version du jeu et aux noms des auteurs en passant respectivement en parametres version ou auteurs.

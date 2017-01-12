@@ -12,7 +12,8 @@ using namespace std;
 
 int Game::points[] = {10, 25, 45, 60, 75, 90};
 
-Game::Game(int n, Piece *p, GameUI ui, char nom[]): piecesCount(n), gameUI(ui) {
+Game::Game(int n, Piece *p, GameUI ui, string nom): piecesCount(n), gameUI(ui) {
+  name = nom;
   pieces = new Piece[n];
   for(int i = 0; i < n; i++) {
     pieces[i] = p[i];
@@ -25,10 +26,6 @@ Game::Game(int n, Piece *p, GameUI ui, char nom[]): piecesCount(n), gameUI(ui) {
     }
   }
 
-  for(int i = 0; i < 10; i++) {
-    name[i] = nom[i];
-  }
-
   createWindows();
 }
 
@@ -39,6 +36,8 @@ void Game::start() {
 }
 
 void Game::restart() {
+  ofstream outfile("save.dat", ios::out | ios::trunc);
+  outfile.close();
   selectPiece(0);
   score = 0;
   for(int i = 0; i < 10; i++) {
@@ -55,12 +54,14 @@ void Game::restart() {
       gameUI.printPointer(blocks[i], X, Y, CLOUD);
     }
   }
+  getRandomPieces();
   initialize();
 }
 
 void Game::gameOver() {
   ofstream outfile("save.dat", ios::out | ios::trunc);
   outfile.close();
+
   gameUI.printGameOver(game);
   int x = 5;
   while( x > 0 && score > thehighscores[x-1].score) {
@@ -72,6 +73,7 @@ void Game::gameOver() {
   while(!added && i < 5) {
     if(score > thehighscores[i].score) {
       high[i].score = score;
+      high[i].name = name;
       added = true;
     } else {
       high[i] = thehighscores[i];
@@ -80,45 +82,20 @@ void Game::gameOver() {
   }
   while(i < 4) {
     high[i+1] = thehighscores[i];
+    i++;
   }
 
   for(int i = 0; i < 5; i++) {
     thehighscores[i] = high[i];
   }
-//  char name[10];
-  if(added) {
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
 
+  if(added) {
     ofstream outfile("highscores.dat", ios::out | ios::trunc);
     for(int i = 0; i < 5; i++) {
-      outfile.write(thehighscores[i].name, 10);
-      outfile<<endl;
+      outfile<<thehighscores[i].name<<endl;
       outfile<<thehighscores[i].score<<endl;
     }
     outfile.close();
-//    help->print(0,0, "New highscore");
-//    help->print(0,1,"Enter you name:");
-//    char mesg[]="Enter a string: ";		/* message to be appeared on the screen */
-//    char str[80];
-//    //initscr();				/* start the curses mode */
-//    //help->print(0,2,mesg);
-//                           /* print the message at the center of the screen */
-//    getstr(str);
-//    help->print(0, 3, str);
-//    //getch();
-//    //endwin();
-//    //help->print(0,2,input);
-//    stopProgramX();
-//    cout<<"new highscore"<<endl;
-//    cout<<"Enter you name (10 char)"<<endl;
-//    cin>>name;
-//    cout<<name<<"     "<<score<<endl;
   }
 }
 
@@ -210,35 +187,43 @@ void Game::goBack() {
 
   infile.open("temp.dat");
   outfile.open("save.dat", ios::out | ios::trunc);
-  while(!infile.eof()) {
-    infile.get(c);
-    outfile<<c;
-  }
-  infile.close();
-  outfile.close();
+  infile.seekg( 0, ios::end );
+  if(infile.tellg() > 0) {
+    infile.seekg(0, ios::beg);
+    while(!infile.eof()) {
+      infile.get(c);
+      outfile<<c;
+    }
+    for(int i = 0; i < 10; i++) {
+      deleteColumn(i);
+    }
+    for(int i = 0; i < 3; i++) {
+      Piece p = pieces[piecesToPlay[i]];
+      for(int c = 0; c < p.getSize(); c++) {
+        float X = 0.25 + p.getX(c);
+        float Y = 0.5 + p.getY(c);
+        gameUI.printPointer(blocks[i], X, Y, CLOUD);
+      }
+    }
 
-  for(int i = 0; i < 10; i++) {
-    deleteColumn(i);
-  }
-  for(int i = 0; i < 3; i++) {
-    Piece p = pieces[piecesToPlay[i]];
-    for(int c = 0; c < p.getSize(); c++) {
-      float X = 0.25 + p.getX(c);
-      float Y = 0.5 + p.getY(c);
-      gameUI.printPointer(blocks[i], X, Y, CLOUD);
+    showScore();
+    infile.close();
+    outfile.close();
+    load();
+    bool selected = false;
+    int i = 0;
+    while(!selected && i < 3) {
+      if(piecesToPlay[i] != -1) {
+        selectPiece(i);
+        selected = true;
+      }
+      i++;
     }
+  } else {
+    restart();
+    infile.close();
+    outfile.close();
   }
-  load();
-  bool selected = false;
-  int i = 0;
-  while(!selected && i < 3) {
-    if(piecesToPlay[i] != -1) {
-      selectPiece(i);
-      selected = true;
-    }
-    i++;
-  }
-  showScore();
 }
 
 void Game::prompt() {
@@ -298,6 +283,12 @@ void Game::prompt() {
         break;
       }
     }
+    switch (input) {
+    case 'r':
+    case 'R':
+      restart();
+      break;
+    }
   }
 }
 
@@ -307,18 +298,17 @@ void Game::createWindows() {
   scoreField->setCouleurBordure(MIDNIGHT);
 
   crown = new Window(7,13,50,0);
-  crown->setCouleurFenetre(CLOUD);
+  crown->setCouleurFenetre(MIDNIGHT);
   crown->setCouleurBordure(MIDNIGHT);
-  //crown->printBold(2, 1, "/\\    /\\", YELLOWT);
-  crown->printBold(1, 2, "/\\/\\/\\/\\/\\", YELLOWT);
-  crown->printBold(1, 3, "|        |", YELLOWT);
-  crown->printBold(2, 3, " * * * *", REDT);
-  crown->printBold(1, 4, "|________|", YELLOWT);
+  crown->printBold(2, 1, "  _.+._  ", REDT);
+  crown->printBold(2, 2, "(^\\/^\\/^)", YELLOWT);
+  crown->printBold(2, 3, " \\     /", YELLOWT);
+  crown->printBold(4, 3, "@*@*@", GREENT);
+  crown->printBold(2, 4, " {_____}", YELLOWT);
 
   highscore = new Window(7,48,64,0);
   highscore->setCouleurFenetre(CLOUD);
   highscore->setCouleurBordure(MIDNIGHT);
-
 
   game = new Window(20,40,0,9);
   game->setCouleurFenetre(CLOUD);
@@ -341,13 +331,15 @@ void Game::createWindows() {
   highscores = new Window(6,46,42,9);
   highscores->setCouleurFenetre(CLOUD);
   highscores->setCouleurBordure(MIDNIGHT);
-  highscores->print(1, 1, "Highscores");
-  highscores->print(1, 2, "__________");
 
   help = new Window(6,22,90,9);
   help->setCouleurFenetre(CLOUD);
   help->setCouleurBordure(MIDNIGHT);
-  //help->print(1, 1, "q: quit");
+  help->print(1, 1, "a,z,e: choose piece");
+  help->print(1, 2, "enter/space: place");
+  help->print(1, 3, "arrows: move");
+  help->print(1, 4, "r: restart");
+  help->print(1, 5, "q: quit");
 }
 
 void Game::saveGame() {
@@ -376,18 +368,20 @@ void Game::getHighscores() {
   infile.open("highscores.dat");
   for(int i = 0; i < 5; i++) {
     infile>>data;
-    for(int j = 0; j < 10; j++) {
-      thehighscores[i].name[j] = data[j];
-    }
+    thehighscores[i].name = data;
     infile>>data;
     thehighscores[i].score = atoi(&data[0]);
     for(int j = 0; j < 10; j++) {
       thehighscores[i].charScore[j] = data[j];
     }
   }
+  infile.close();
 }
 
 void Game::showHigscores() {
+  highscores->clear();
+  highscores->print(1, 1, "Highscores");
+  highscores->print(1, 2, "__________");
   int y = 1;
   for(int i = 0; i < 5; i++) {
     gameUI.showHighscore(highscores, 20, y*i + 1, thehighscores[i].name, thehighscores[i].charScore);
@@ -518,9 +512,9 @@ void Game::putPiece(){
     selectPiece(0);
   }
 
-  isGameOver();
-
   saveGame();
+
+  isGameOver();
 }
 
 void Game::isGameOver() {

@@ -1,12 +1,16 @@
 #ifndef __GAME_H
 #define __GAME_H
 
+#include <string>
+
 #include "window.h"
 #include "piece.h"
 #include "gameUI.h"
 
+using namespace std;
+
 struct Highscore {
-  char name[10];
+  string name;
   int score;
   char charScore[10];
 };
@@ -17,7 +21,7 @@ class Game {
   int board[10][10], piecesToPlay[3];
   static int points[6];
   bool placeable, isgameOver;
-  char name[10];
+  string name;
   Window *game, *help, *scoreField, *highscore, *highscores, *crown, *blocks[3];
   GameUI gameUI;
   Piece *pieces;
@@ -25,7 +29,7 @@ class Game {
   Highscore thehighscores[5];
 
  public:
-  Game(int n, Piece *p, GameUI ui, char nom[]);
+  Game(int n, Piece *p, GameUI ui, string nom);
 
   void start();
   void restart();

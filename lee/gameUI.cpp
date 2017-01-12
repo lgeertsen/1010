@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <string>
 
 using namespace std;
 
@@ -100,7 +101,7 @@ void GameUI::showScore(Window *w, int n, Color c) {
   }
 }
 
-void GameUI::showHighscore(Window *w, int x, int y, char name[], char score[]) {
+void GameUI::showHighscore(Window *w, int x, int y, string name, char score[]) {
   w->print(x, y, name);
   w->print(x+15, y, score);
 }
@@ -117,12 +118,48 @@ void GameUI::printNumber(Window *w, Number n, int x, Color c) {
 
 void GameUI::printGameOver(Window *w) {
   for(int i = 0; i < 8; i++) {
+    int x, y;
     Letter L = letters[i];
+    switch(i) {
+    case 0:
+      x = 0;
+      y = 2;
+      break;
+    case 1:
+      x = 10;
+      y = 2;
+      break;
+    case 2:
+      x = 22;
+      y = 2;
+      break;
+    case 3:
+      x = 34;
+      y = 2;
+      break;
+    case 4:
+      x = 1;
+      y = 10;
+      break;
+    case 5:
+      x = 11;
+      y = 10;
+      break;
+    case 6:
+      x = 23;
+      y = 10;
+      break;
+    case 7:
+      x = 31;
+      y = 10;
+      break;
+    }
+
     for(int j = 0; j < L.size; j++) {
-      int X = i * 10 + L.coord[j].x *2;
-      int Y = 1 + L.coord[j].y;
+      int X = x + L.coord[j].x *2;
+      int Y = y + L.coord[j].y;
       for(int k = 0; k < 2; k++) {
-        w->print(X+k, Y, BWHITE);
+        w->print(X+k, Y, '*', BRED);
       }
     }
   }

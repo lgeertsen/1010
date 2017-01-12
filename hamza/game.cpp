@@ -133,17 +133,16 @@ void Game::createWindows() {
   crown = new Window(7,13,50,0);
   crown->setCouleurFenetre(CLOUD);
   crown->setCouleurBordure(MIDNIGHT);
-  //crown->printBold(2, 1, "/\\    /\\", YELLOWT);
-  crown->printBold(1, 2, "/\\/\\/\\/\\/\\", YELLOWT);
-  crown->printBold(1, 3, "|        |", YELLOWT);
-  crown->printBold(2, 3, " * * * *", REDT);
-  crown->printBold(1, 4, "|________|", YELLOWT);
+  crown->printBold(2, 1, "/\\    /\\", YELLOWT);
+  crown->printBold(2, 1, "  _.+._  ", YELLOWT);
+  crown->printBold(2, 2, "(^\\/^\\/^)", YELLOWT);
+  crown->printBold(2, 3, " \\     /", YELLOWT);
+  crown->printBold(4, 3, "@*@*@", REDT);
+  crown->printBold(2, 4, " {_____}", YELLOWT);
 
-  
   highscore = new Window(7,48,64,0);
   highscore->setCouleurFenetre(CLOUD);
   highscore->setCouleurBordure(MIDNIGHT);
-
 
   game = new Window(20,40,0,9);
   game->setCouleurFenetre(CLOUD);

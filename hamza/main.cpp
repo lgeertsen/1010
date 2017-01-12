@@ -141,7 +141,7 @@ int main(int argc,char* argv[]) {
     }else if (argv[i]==string("version")){
       cout<<"Version:1.0"<<endl; 
     }else if (argv[i]==string("auteurs")){
-      cout<<"Auteurs:\n"<<"Hamza Mellouki\n"<<"Lee Gartseen\n"<<"Imrhan\n"<<"Aurelien\n"<<endl;
+      cout<<"Auteurs:\n"<<"Hamza Mellouki\n"<<"Lee Geertsen\n"<<"Imrhan Dareine\n"<<"Aurelien Ambroise\n"<<endl;
     }
   }
   if (argc==1){

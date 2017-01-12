@@ -88,8 +88,9 @@ void init_colors(void)
   init_color(44, 1000, 341, 133);
   init_pair(DEEPORANGE, 43, 44);
 
-  init_pair(REDT, 13, 11);
-  init_pair(YELLOWT, 37, 11);
+  init_pair(REDT, 13, 12);
+  init_pair(YELLOWT, 37, 12);
+  init_pair(GREENT, 34, 12);
 }
 
 

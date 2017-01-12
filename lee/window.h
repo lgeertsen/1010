@@ -41,7 +41,8 @@ enum Color {
   ORANGE,
   DEEPORANGE,
   REDT,
-  YELLOWT
+  YELLOWT,
+  GREENT
 };
 
 
