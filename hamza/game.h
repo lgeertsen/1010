@@ -4,45 +4,31 @@
 #include "window.h"
 #include "piece.h"
 #include "gameUI.h"
-
-struct Highscore {
-  char name[10];
-  int score;
-  char charScore[10];
-};
+#include <iostream>
+#include <fstream>
 
 class Game {
  private:
   int score, piecesCount, selectedPiece;
   int board[10][10], piecesToPlay[3];
   static int points[6];
-  bool placeable, isgameOver;
-  char name[10];
+  bool placeable;
   Window *game, *help, *scoreField, *highscore, *highscores, *crown, *blocks[3];
   GameUI gameUI;
   Piece *pieces;
   Coordinates pointer;
-  Highscore thehighscores[5];
 
  public:
-  Game(int n, Piece *p, GameUI ui, char nom[]);
+  Game(int n, Piece *p, GameUI ui);
 
   void start();
   void restart();
-  void gameOver();
   void initialize();
-  bool load();
-  void loadSave();
-  void goBack();
   void prompt();
 
   void createWindows();
 
-  void saveGame();
-
   void showScore();
-  void getHighscores();
-  void showHigscores();
 
   void movePointer(int x, int y);
 
@@ -58,8 +44,6 @@ class Game {
 
   void putPiece();
 
-  void isGameOver();
-
   int checkColumns(int x, int w);
   int checkRows(int y, int h);
 
@@ -69,6 +53,15 @@ class Game {
   void deleteRow(int y);
 
   Color getColor(int n);
+  int getScore() const;
+  int getBoard(int i,int j) const;
+  bool getPlaceable() const;
+  int getpiecesToPlay(int i) const;
+
+  void setScore(int n);
+  void setBoard(int i,int j,int n);
+
+  void GameOver();
 };
 
 #endif

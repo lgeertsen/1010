@@ -3,37 +3,29 @@
 #include "gameUI.h"
 #include "game.h"
 
+#include <stdlib.h>
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <string>
-
 using namespace std;
 
 int Game::points[] = {10, 25, 45, 60, 75, 90};
 
-Game::Game(int n, Piece *p, GameUI ui, char nom[]): piecesCount(n), gameUI(ui) {
+Game::Game(int n, Piece *p, GameUI ui): piecesCount(n), gameUI(ui) {
   pieces = new Piece[n];
   for(int i = 0; i < n; i++) {
     pieces[i] = p[i];
   }
 
-  score = 0;
+  score = 823456;
   for(int i = 0; i < 10; i++) {
     for(int j = 0; j < 10; j++) {
       board[i][j] = 0;
     }
   }
-
-  for(int i = 0; i < 10; i++) {
-    name[i] = nom[i];
-  }
-
   createWindows();
 }
 
 void Game::start() {
-  loadSave();
   initialize();
   prompt();
 }
@@ -58,245 +50,77 @@ void Game::restart() {
   initialize();
 }
 
-void Game::gameOver() {
-  ofstream outfile("save.dat", ios::out | ios::trunc);
-  outfile.close();
-  gameUI.printGameOver(game);
-  int x = 5;
-  while( x > 0 && score > thehighscores[x-1].score) {
-    x--;
-  }
-  Highscore high[5];
-  bool added = false;
-  int i = 0;
-  while(!added && i < 5) {
-    if(score > thehighscores[i].score) {
-      high[i].score = score;
-      added = true;
-    } else {
-      high[i] = thehighscores[i];
-      i++;
-    }
-  }
-  while(i < 4) {
-    high[i+1] = thehighscores[i];
-  }
-
-  for(int i = 0; i < 5; i++) {
-    thehighscores[i] = high[i];
-  }
-//  char name[10];
-  if(added) {
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-    cout<<"yoouuuu have a highscooooooore"<<endl;
-
-    ofstream outfile("highscores.dat", ios::out | ios::trunc);
-    for(int i = 0; i < 5; i++) {
-      outfile.write(thehighscores[i].name, 10);
-      outfile<<endl;
-      outfile<<thehighscores[i].score<<endl;
-    }
-    outfile.close();
-//    help->print(0,0, "New highscore");
-//    help->print(0,1,"Enter you name:");
-//    char mesg[]="Enter a string: ";		/* message to be appeared on the screen */
-//    char str[80];
-//    //initscr();				/* start the curses mode */
-//    //help->print(0,2,mesg);
-//                           /* print the message at the center of the screen */
-//    getstr(str);
-//    help->print(0, 3, str);
-//    //getch();
-//    //endwin();
-//    //help->print(0,2,input);
-//    stopProgramX();
-//    cout<<"new highscore"<<endl;
-//    cout<<"Enter you name (10 char)"<<endl;
-//    cin>>name;
-//    cout<<name<<"     "<<score<<endl;
-  }
-}
-
 void Game::initialize() {
   showScore();
   selectedPiece = 0;
+  getRandomPieces();
   pointer.x = 0;
   pointer.y = 0;
-  isgameOver = false;
+  placeable = true;
   placePointer();
-  getHighscores();
-  showHigscores();
-}
-
-bool Game::load() {
-  ifstream infile("save.dat");
-  infile.seekg( 0, ios::end );
-  if(infile.tellg() > 0) {
-    char c;
-    infile.seekg(-2, ios::end);
-    infile.get(c);
-    while(c != 'a') {
-      infile.seekg(-2, ios::cur);
-      infile.get(c);
-    }
-    char data[10];
-    infile>>data;
-    score = atoi(&data[0]);
-    for(int i = 0; i < 10; i ++) {
-      for(int j = 0; j < 10; j++) {
-        infile>>data;
-        int n = atoi(&data[0]);
-        board[j][i] = n;
-        if(n != 0)
-          gameUI.printPart(game, j*4, i*2, getColor(n));
-      }
-    }
-    for(int i = 0; i < 3; i++) {
-      infile>>data;
-      piecesToPlay[i] = atoi(&data[0]);
-      gameUI.printPiece(blocks[i], pieces[piecesToPlay[i]], 0.25, 0.5);
-    }
-    infile.close();
-    return true;
-  }
-  infile.close();
-  return false;
-}
-
-void Game::loadSave() {
-  if(!load()){
-    getRandomPieces();
-  }
-}
-
-void Game::goBack() {
-  ifstream infile("save.dat");
-  ofstream outfile("temp.dat", ios::out | ios::trunc);
-  infile.seekg(0, ios::end);
-  char c;
-  infile.seekg(-2, ios::end);
-  infile.get(c);
-  while(c != 'a') {
-    infile.seekg(-2, ios::cur);
-    infile.get(c);
-  }
-  char data[10];
-  int tempScore;
-  int tempScore2 = -1;
-  infile>>data;
-  tempScore = atoi(&data[0]);
-
-  infile.seekg(0, ios::beg);
-  while(tempScore != tempScore2) {
-    infile.get(c);
-    while(c != 'a') {
-      outfile<<c;
-      infile.get(c);
-    }
-    infile>>data;
-    tempScore2 = atoi(&data[0]);
-    if(tempScore2 != tempScore) {
-      outfile<<c<<'\n';
-      outfile<<tempScore2;
-    }
-  }
-  infile.close();
-  outfile.close();
-
-  infile.open("temp.dat");
-  outfile.open("save.dat", ios::out | ios::trunc);
-  while(!infile.eof()) {
-    infile.get(c);
-    outfile<<c;
-  }
-  infile.close();
-  outfile.close();
-
-  for(int i = 0; i < 10; i++) {
-    deleteColumn(i);
-  }
-  for(int i = 0; i < 3; i++) {
-    Piece p = pieces[piecesToPlay[i]];
-    for(int c = 0; c < p.getSize(); c++) {
-      float X = 0.25 + p.getX(c);
-      float Y = 0.5 + p.getY(c);
-      gameUI.printPointer(blocks[i], X, Y, CLOUD);
-    }
-  }
-  load();
-  bool selected = false;
-  int i = 0;
-  while(!selected && i < 3) {
-    if(piecesToPlay[i] != -1) {
-      selectPiece(i);
-      selected = true;
-    }
-    i++;
-  }
-  showScore();
 }
 
 void Game::prompt() {
   int input;
-  while((input = getch()) != 'q' && input != 'Q') {
-    if(!isgameOver) {
-      switch (input) {
-      case 'a':
-      case 'A':
-        if(piecesToPlay[0] != -1 && selectedPiece != 0) {
-          selectPiece(0);
-        }
-        break;
-      case 'z':
-      case 'Z':
-        if(piecesToPlay[1] != -1 && selectedPiece != 1) {
-          selectPiece(1);
-        }
-        break;
-      case 'e':
-      case 'E':
-        if(piecesToPlay[2] != -1 && selectedPiece != 2) {
-          selectPiece(2);
-        }
-        break;
-      case '\n':
-      case ' ':
-        if(placeable)
-          putPiece();
-        break;
-      case KEY_UP:
-        if(pointer.y > 0) {
-          movePointer(0, -1);
-        }
-        break;
-      case KEY_DOWN:
-        if(pointer.y < 10 - pieces[piecesToPlay[selectedPiece]].getHeight()) {
-          movePointer(0, 1);
-        }
-        break;
-      case KEY_LEFT:
-        if(pointer.x > 0) {
-          movePointer(-1, 0);
-        }
-        break;
-      case KEY_RIGHT:
-        if(pointer.x < 10 - pieces[piecesToPlay[selectedPiece]].getWidth()) {
-          movePointer(1, 0);
-        }
-        break;
-      case 'r':
-      case 'R':
-        restart();
-        break;
-      case KEY_BACKSPACE:
-        goBack();
-        break;
+  while((input = getch()) != 'q') {
+    switch (input) {
+    case 'a':
+      if(piecesToPlay[0] != -1 && selectedPiece != 0) {
+        selectPiece(0);
       }
+      break;
+    case 'z':
+      if(piecesToPlay[1] != -1 && selectedPiece != 1) {
+        selectPiece(1);
+      }
+      break;
+    case 'e':
+      if(piecesToPlay[2] != -1 && selectedPiece != 2) {
+        selectPiece(2);
+      }
+      break;
+    case 'A':
+      if(piecesToPlay[0] != -1 && selectedPiece != 0) {
+        selectPiece(0);
+      }
+      break;
+    case 'Z':
+      if(piecesToPlay[1] != -1 && selectedPiece != 1) {
+        selectPiece(1);
+      }
+      break;
+    case 'E':
+      if(piecesToPlay[2] != -1 && selectedPiece != 2) {
+        selectPiece(2);
+      }
+      break;
+    case ' ':
+      if(placeable)
+        putPiece();
+      break;
+    case KEY_UP:
+      if(pointer.y > 0) {
+      	movePointer(0, -1);
+      }
+      break;
+    case KEY_DOWN:
+      if(pointer.y < 10 - pieces[piecesToPlay[selectedPiece]].getHeight()) {
+      	movePointer(0, 1);
+      }
+      break;
+    case KEY_LEFT:
+      if(pointer.x > 0) {
+      	movePointer(-1, 0);
+      }
+      break;
+    case KEY_RIGHT:
+      if(pointer.x < 10 - pieces[piecesToPlay[selectedPiece]].getWidth()) {
+      	movePointer(1, 0);
+      }
+      break;
+    case 'r':
+      restart();
+      break;
     }
   }
 }
@@ -315,6 +139,7 @@ void Game::createWindows() {
   crown->printBold(2, 3, " * * * *", REDT);
   crown->printBold(1, 4, "|________|", YELLOWT);
 
+  
   highscore = new Window(7,48,64,0);
   highscore->setCouleurFenetre(CLOUD);
   highscore->setCouleurBordure(MIDNIGHT);
@@ -347,52 +172,11 @@ void Game::createWindows() {
   help = new Window(6,22,90,9);
   help->setCouleurFenetre(CLOUD);
   help->setCouleurBordure(MIDNIGHT);
-  //help->print(1, 1, "q: quit");
-}
-
-void Game::saveGame() {
-  ofstream outfile("save.dat", ios::out | ios::app);
-  outfile<<"a"<<endl;
-  outfile<<score<<endl;
-  for(int i = 0; i < 10; i++) {
-    for(int j = 0; j < 10; j++) {
-      outfile<<board[j][i]<<" ";
-    }
-    outfile<<endl;
-  }
-  for(int i = 0; i < 3; i++) {
-    outfile<<piecesToPlay[i]<<endl;
-  }
-  outfile.close();
+  help->print(1, 1, "q: quit");
 }
 
 void Game::showScore() {
-  gameUI.showScore(scoreField, score, LIGHTGREEN);
-}
-
-void Game::getHighscores() {
-  char data [10];
-  ifstream infile;
-  infile.open("highscores.dat");
-  for(int i = 0; i < 5; i++) {
-    infile>>data;
-    for(int j = 0; j < 10; j++) {
-      thehighscores[i].name[j] = data[j];
-    }
-    infile>>data;
-    thehighscores[i].score = atoi(&data[0]);
-    for(int j = 0; j < 10; j++) {
-      thehighscores[i].charScore[j] = data[j];
-    }
-  }
-}
-
-void Game::showHigscores() {
-  int y = 1;
-  for(int i = 0; i < 5; i++) {
-    gameUI.showHighscore(highscores, 20, y*i + 1, thehighscores[i].name, thehighscores[i].charScore);
-  }
-  gameUI.showScore(highscore, thehighscores[0].score, RED);
+  gameUI.showScore(scoreField, score);
 }
 
 void Game::movePointer(int x, int y) {
@@ -434,7 +218,6 @@ void Game::placePointer() {
     else
       gameUI.printPointer(game, x, y, RED);
   }
-  
 }
 
 void Game::getRandomPieces() {
@@ -517,48 +300,20 @@ void Game::putPiece(){
     getRandomPieces();
     selectPiece(0);
   }
-
-  isGameOver();
-
-  saveGame();
-}
-
-void Game::isGameOver() {
-  int i = 0;
-  bool free = false;
-  while(!free && i < 10) {
-    int j = 0;
-    while(!free && j < 10) {
-      if(board[i][j] == 0) {
-        int k = 0;
-        while(!free && k < 3) {
-          int m = 0;
-          int ptp = piecesToPlay[k];
-          if(ptp >= 0 ) {
-            Piece p = pieces[piecesToPlay[k]];
-            bool place = true;
-            while(place && m < p.getSize()) {
-              int x = i + p.getX(m);
-              int y = j + p.getY(m);
-              if(x > 9 || y > 9 || board[x][y] != 0)
-                place = false;
-              m++;
-            }
-            if(place)
-                free = true;
-          }
-          k++;
-        }
-      }
-      j++;
+  bool res=false;
+  for (int a=0;a<10;a++){
+    for(int b=0;b<10;b++){
+      if (board[a][b]!=0 && !placeable)
+	res=true;
+      else
+	res=false;
     }
-    i++;
   }
-  if(!free)
-    isgameOver = true;
-
-  if(isgameOver)
-    gameOver();
+  if (res==true){
+    gameUI.showScore(scoreField,0);
+    gameUI.GameOver(scoreField,0,4);
+    gameUI.GameOver(highscore,4,9);
+      }
 }
 
 int Game::checkColumns(int x, int w) {
@@ -692,3 +447,9 @@ Color Game::getColor(int n) {
   }
   return c;
 }
+int Game::getScore() const{return score;}
+int Game::getBoard(int i,int j) const{return board[i][j];}
+void Game::setScore(int n){score=n;}
+void Game::setBoard(int i,int j,int n){board[i][j]=n;}
+bool Game::getPlaceable() const{return placeable;}
+int Game::getpiecesToPlay(int i) const{return piecesToPlay[i];}

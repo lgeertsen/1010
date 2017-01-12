@@ -1,0 +1,12 @@
+Pour mener a bien le projet 1010, nous avons separer notre travail en plusieurs classes:Tout d'abord la classe la classe game.h qui contient les c actions des touches, la suppresion de lignes et/ou de colonnes, la pose de pieces et la creations des differentes fenetres de jeu. 
+Puis la classe gameUI qui gere exclusivement l'affichage des pieces et des bordures. La classe Window fourni par le professeur que nous avons quelque peu modifié. Et enfin la classe pieces qui comme son nom l'indique contient les pieces.
+
+---On a tout de suite tenu a ajouter des couleurs plus vif au jeu, nous avons donc creer un fichier bash qui passe les couleurs du terminal a 256. Nous avons ensuite modifié l'enumeration de couleur de la classe windows pour ajouter plus de couleurs au jeu. Puis nous avons creer une nouvelle methode print qui remplace les bordures "+" par des bordures "|".
+---Pour pouvoir creer les differentes fenetres de jeu nous avons utiliser la classe windows dans une nouvelle classe:la classe game. Cette classe gére donc l'affichage du score et des pieces 
+
+Des le depart nous avions voulu rendre le jeu le plus intuitive et simple possible en permettant le placement des pieces via le clavier nous avons donc fais une methode avec switch case qui permettrer d'agir differemment selon la touche appuyer. 
+C'est aussi dans cette classe que nous faisons la verification des lignes et des colonnes.En effet cette partie etait assez difficile car il etait difficile de faire a la fois la verification d'une colonne et d'une ligne pour permettre leur suppression simultanee.
+Apres cela nous avons mis en place le calcul du score et son affichage.
+---Nous avons ensuite fait la classe pieces a ce qu'elle permette la creation de toute nouvelle pieces de la plus simple des facons.En effet, nos pieces sont composées d'une taille, d'une structures coordonnées et d'une couleur. Ensuite nous avons creer un flux en lecture d'un fichier nommé "pieces.dat" pour permettre la reproduction des pieces fournis dans le sujet. Cette lecture est faite dans le programme principale main.
+---Nous avons laisser les etapes les plus embettante pour la fin.
+Nous avons qu'en fin de projet ajouter l'affichage du game over, l'ajout de l'aide avec un flux entrant et finalement la sauvegarde d'une partie et sa reprise. 

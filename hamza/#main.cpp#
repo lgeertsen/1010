@@ -107,6 +107,8 @@ void myprogram() {
 	}
       }
       save<<b<<endl;
+      b=game.get
+      save<<
       save.close();
     }
   }

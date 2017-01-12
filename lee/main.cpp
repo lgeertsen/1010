@@ -68,7 +68,11 @@ using namespace std;
 //  return c;
 //}
 
-void myprogram() {
+void myprogram(char name[]) {
+  char nom[10];
+  for(int i = 0; i < 10; i++) {
+    nom[i] = name[i];
+  }
   char data[3];
   ifstream infile;
   infile.open("pieces.dat");
@@ -93,13 +97,16 @@ void myprogram() {
 
   GameUI gameUI;
 
-  Game game(nbPieces, p, gameUI);
+  Game game(nbPieces, p, gameUI, nom);
   game.start();
 }
 
 int main() {
+  char name[255];
+  cout<<"Enter you name: ";
+  cin>>name;
   startProgramX();
-  myprogram();
+  myprogram(name);
   stopProgramX();
   return 0;
 }

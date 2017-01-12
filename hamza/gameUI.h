@@ -9,29 +9,21 @@ struct Number {
   Coordinates *coord;
 };
 
-struct Letter {
-  int size;
-  Coordinates *coord;
-};
-
 class GameUI {
  private:
   Number numbers[10];
-  Letter letters[8];
 
  public:
   GameUI();
+  void GameOver(Window *w,int x,int y);
 
   void printPiece(Window *w, Piece p, float x, float y);
   void printPart(Window *w, float x, float y, Color c);
   void printPointer(Window *w, float x, float y, Color c);
 
-  void showScore(Window *w, int n, Color c);
-  void showHighscore(Window *w, int x, int y, char name[], char score[]);
+  void showScore(Window *w, int n);
 
-  void printNumber(Window *w, Number n, int x, Color c);
-
-  void printGameOver(Window *w);
+  void printNumber(Window *w, Number n, int x);
 
   void changeBorder(Window *w, Color c);
   void fill(Window *w, Color c);

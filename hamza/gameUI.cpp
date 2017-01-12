@@ -25,20 +25,34 @@ GameUI::GameUI() {
     }
   }
   infile.close();
-  infile.open("letters.dat");
-  for(int i = 0; i < 8; i++) {
+}
+void GameUI::GameOver(Window *w,int x,int y){
+  char data[5];
+  ifstream infile;
+  infile.open("GameOver.dat");
+  for(int i = 0; i < 9; i++) {
     infile>>data;
     int s = atoi(&data[0]);
-    letters[i].size = s;
-    letters[i].coord = new Coordinates[s];
+    numbers[i].size = s;
+    numbers[i].coord = new Coordinates[s];
     for(int j = 0; j < s; j++) {
       infile>>data;
-      letters[i].coord[j].x = atoi(&data[0]);
+      numbers[i].coord[j].x = atoi(&data[0]);
       infile>>data;
-      letters[i].coord[j].y = atoi(&data[0]);
+      numbers[i].coord[j].y = atoi(&data[0]);
+      for(int i = 0; i < numbers->size; i++) {
+	for(int j=x;j<y;j++){
+	  int X = 1 + numbers->coord[i].x;
+	  int Y = 1 + numbers->coord[i].y;
+	  for(int j = 0; j < 2; j++) {
+	    w->print(X+j, Y, RED);
+	  }
+	}
+      }
     }
   }
-}
+  infile.close();
+}  
 
 void GameUI::printPiece(Window *w, Piece p, float x, float y) {
   for(int c = 0; c < p.getSize(); c++) {
@@ -84,15 +98,15 @@ void GameUI::printPointer(Window *w, float x, float y, Color c) {
 }
 
 
-void GameUI::showScore(Window *w, int n, Color c) {
+void GameUI::showScore(Window *w, int n) {
   fill(w, CLOUD);
   int i = 0;
   if(n == 0) {
-    printNumber(w, numbers[0], 0, c);
+    printNumber(w, numbers[0], 0);
   } else {
     while(n != 0) {
       int x = n % 10;
-      printNumber(w, numbers[x], i, c);
+      printNumber(w, numbers[x], i);
       n -= x;
       n /= 10;
       i++;
@@ -100,30 +114,12 @@ void GameUI::showScore(Window *w, int n, Color c) {
   }
 }
 
-void GameUI::showHighscore(Window *w, int x, int y, char name[], char score[]) {
-  w->print(x, y, name);
-  w->print(x+15, y, score);
-}
-
-void GameUI::printNumber(Window *w, Number n, int x, Color c) {
+void GameUI::printNumber(Window *w, Number n, int x) {
   for(int i = 0; i < n.size; i++) {
     int X = (41 - (x * 8)) + n.coord[i].x * 2;
     int Y = 1 + n.coord[i].y;
     for(int j = 0; j < 2; j++) {
-      w->print(X+j, Y, c);
-    }
-  }
-}
-
-void GameUI::printGameOver(Window *w) {
-  for(int i = 0; i < 8; i++) {
-    Letter L = letters[i];
-    for(int j = 0; j < L.size; j++) {
-      int X = i * 10 + L.coord[j].x *2;
-      int Y = 1 + L.coord[j].y;
-      for(int k = 0; k < 2; k++) {
-        w->print(X+k, Y, BWHITE);
-      }
+      w->print(X+j, Y, LIGHTGREEN);
     }
   }
 }
