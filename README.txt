@@ -1,0 +1,1 @@
+Pour compiler et executer le jeux: make;
